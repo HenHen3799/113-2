@@ -1,0 +1,114 @@
+<html>
+<head>
+    <title>0310筆記-CSS</title>
+    <meta charset="UTF-8">
+    <style>
+        #d1{
+            width: 300px;
+            height: 100px;
+            background-color: #88ddbe;
+        }
+        
+        /* CSS color:
+            1.name
+            2.#HEX 00~FF
+            3.rgb(r,g,b) 0~255
+            4.rgba(r,g,b,a 0~1)
+            5.hsl(色相0~360,彩度0~100%,亮度0~100%)
+            6.hsla(h,s,l,可見度0~1)
+        */
+        .grad{
+            width: 300px;
+            height: 100px;
+            margin: 10px 0px;    
+            display: inline-block;
+        }
+        #d2{
+            background: linear-gradient(red,yellow);
+        }
+        #d3{/*top bottom right left 0~360edg*/
+            background: linear-gradient(90deg,rgb(252, 192, 202),rgb(136, 195, 255));
+        }
+        #d4{
+            background: linear-gradient(90deg,rgb(201, 201, 201)30%,#23ffae 50%,rgb(255, 255, 100)70%)
+        }
+        #d5{
+            background: repeating-linear-gradient(45deg,rgb(252, 192, 202)45%,rgb(136, 195, 255)50%,rgb(252, 192, 202)55%);
+        }
+        #r1{
+            background: radial-gradient(circle,rgb(136, 195, 255),rgb(234, 194, 255),rgb(252, 192, 202));
+        }
+        #r2{
+            background: radial-gradient(circle,rgb(136, 195, 255)20%,rgb(234, 194, 255)30%,rgb(252, 192, 202)40%);
+        }
+        #r3{
+            background: repeating-radial-gradient(circle,grey 30%,white 40%,grey 50%);
+        }
+        #c1{
+            background: conic-gradient(red,blue,green,red);
+        }
+        #c2{
+            background: conic-gradient(from 60deg,red,blue,green,red);
+        }
+        #c3{
+            background: repeating-conic-gradient(red 10%,white 15%, red 20%);
+        }
+        .anim{
+            width: 400px;
+            height: 200px;
+            margin: 10px 0px;    
+        }
+        #a1{
+            background: repeating-linear-gradient(45deg,rgb(252, 192, 202)45%,rgb(136, 195, 255)50%,rgb(252, 192, 202)55%);
+            animation: k1 0.5s infinite linear ;
+        }
+        @keyframes k1 {
+            0%{background: repeating-linear-gradient(45deg,rgb(252, 192, 202)45%,rgb(255, 255, 255)50%,rgb(252, 192, 202)55%);}
+            50%{background: repeating-linear-gradient(45deg,rgb(255, 255, 255)45%,rgb(252, 192, 202)50%,rgb(255, 255, 255)55%);}
+            100%{background: repeating-linear-gradient(45deg,rgb(252, 192, 202)45%,rgb(255, 255, 255)50%,rgb(252, 192, 202)55%);}
+        }
+        #a2{
+            background: radial-gradient(circle,rgb(136, 195, 255)20%,rgb(234, 194, 255)30%,rgb(252, 192, 202)40%);
+            animation: k2 0.5s infinite linear ;
+        }
+        @keyframes k2 {
+            0%{background: radial-gradient(circle,rgb(136, 195, 255),rgb(234, 194, 255)30%,rgb(252, 192, 202));}
+            10%{background: radial-gradient(circle,rgb(136, 195, 255),rgb(234, 194, 255)40%,rgb(252, 192, 202));}
+            20%{background: radial-gradient(circle,rgb(136, 195, 255),rgb(234, 194, 255)50%,rgb(252, 192, 202));}
+            30%{background: radial-gradient(circle,rgb(136, 195, 255),rgb(234, 194, 255)60%,rgb(252, 192, 202));}
+            40%{background: radial-gradient(circle,rgb(136, 195, 255),rgb(234, 194, 255)70%,rgb(252, 192, 202));}
+            50%{background: radial-gradient(circle,rgb(136, 195, 255),rgb(234, 194, 255)80%,rgb(252, 192, 202));}
+            60%{background: radial-gradient(circle,rgb(136, 195, 255),rgb(234, 194, 255)70%,rgb(252, 192, 202));}
+            70%{background: radial-gradient(circle,rgb(136, 195, 255),rgb(234, 194, 255)60%,rgb(252, 192, 202));}
+            80%{background: radial-gradient(circle,rgb(136, 195, 255),rgb(234, 194, 255)50%,rgb(252, 192, 202));}
+            90%{background: radial-gradient(circle,rgb(136, 195, 255),rgb(234, 194, 255)40%,rgb(252, 192, 202));}
+            100%{background: radial-gradient(circle,rgb(136, 195, 255),rgb(234, 194, 255)30%,rgb(252, 192, 202));}
+        }
+        #a3{
+            background: repeating-radial-gradient(circle,grey 30%,white 40%,grey 50%);
+            animation: k3 0.5s infinite linear ;
+        }
+        @keyframes k3 {
+            0%{background: repeating-radial-gradient(circle,grey 30%,white 40%,grey 50%);}
+            50%{background: repeating-radial-gradient(circle,rgb(255, 255, 255) 30%,rgb(128, 128, 128) 40%,grey 50%);}
+            100%{background: repeating-radial-gradient(circle,grey 30%,white 40%,grey 50%);}
+        }
+    </style>
+</head>
+<body>
+    <div id="d1"></div>
+    <div id="d2" class="grad"></div>
+    <div id="d3" class="grad"></div>
+    <div id="d4" class="grad"></div>
+    <div id="d5" class="grad"></div>
+    <div id="r1" class="grad"></div>
+    <div id="r2" class="grad"></div>
+    <div id="r3" class="grad"></div>
+    <div id="c1" class="grad"></div>
+    <div id="c2" class="grad"></div>
+    <div id="c3" class="grad"></div>
+    <div id="a1" class="grad"></div>
+    <div id="a2" class="grad"></div>
+    <div id="a3" class="grad"></div>
+</body>
+</html>
