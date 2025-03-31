@@ -1,0 +1,35 @@
+<html>
+<head>
+	<meta charset="UFC-8">
+	<title>11821 宋蕎安</title>
+    <style>
+
+    </style>
+    <script>
+
+        function hello(name,elm){
+           //elm=document.getElementById("msg")
+            elm.innerHTML="hello "+name;
+
+        }
+        function add(a,b){
+            return a+b;
+        }
+        function calc(){
+          elm=document.getElementById("n1");
+          elm=document.getElementById("n2");
+          elmans=document.getElementById("ans");
+          n1=parseInt(elm1.value);
+          n2=parseInt(elm2.value);
+
+          elmans.value=add(n1,n2);
+        }
+
+    </script>
+</head>
+<body>
+    <input type="text" id="n1">+<input type="text" id="n2">
+    <button onclick="">等於</button>
+    <input type="text" id="ans">
+</body>
+</html>
