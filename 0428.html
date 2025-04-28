@@ -1,0 +1,69 @@
+<html>
+<head>
+    <title>JS打字遊戲</title>
+    <meta charset="UTF-8">
+    <style>
+        .word{
+            display: inline-block;
+            padding: 5px 10px;
+            border: 5px solid gray;
+            text-align: center;
+            font-size: 32pt;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+    </style>
+    <script>
+        input=""; // 用來儲存輸入的字串
+        function kbDown(){
+            //console.log(event.key);
+            event.preventDefault(); // 阻止預設行為
+            if(event.key=="Enter"){ // 如果按下 Enter 鍵
+               input=""; // 清空輸入字串
+            }else if(event.key.length == 1){
+                input+=event.key; // 將按下的鍵添加到輸入字串中
+               
+            }
+        }
+        function rand(min,max){ // 隨機數生成函數
+            return Math.floor(Math.random()*(max-min+1))+min; // 返回隨機數
+        }
+        function genWord(){
+            /*var wordlist=["hello","world","apple","banana","cake"];
+            var idx=Math.floor(Math.random()*wordlist.length); // 隨機選擇一個字母
+            return wordlist[idx]; */
+           var len=rand(3,9); // 隨機選擇一個字母的長度 3~12
+           var str="";
+           for(i=0;i<len;i++){
+               var CAPS=[65,97]; // 大寫字母的 ASCII 碼範圍
+               var randnum=rand(0,25)+CAPS[rand(0,1)]; // 隨機選擇大寫或小寫字母
+               str+=String.fromCharCode(randnum); // 將 ASCII 碼轉換為字母並添加到字串中
+           }
+           return str; // 返回生成的字母
+
+        }
+        function gameStart(){
+            document.getElementById("btnStart").style.display = "none"; // 隱藏開始按鈕
+            t1=setInterval(function(){ // 設定計時器，每 1000 毫秒執行一次
+                var a=document.createElement("div"); // 創建一個新的 div 元素
+                a.className="word"; // 設定 class 名稱
+                a.innerHTML=genWord(); // 設定 div 的內容為隨機字母
+                a.pos={x:rand(10,document.body.offsetWidth-100),y:0}; // 設定 div 的位置
+                a.style.left=a.pos.x+"px"; // 設定 div 的 x 軸位置
+                a.move=setInterval(function(o){ // 設定計時器，每 100 毫秒執行一次
+                    o.pos.y+=5; // 更新 div 的 y 軸位置
+                    o.style.top=o.pos.y+"px"; // 更新 div 的 y 軸位置
+                    if(o.pos.y>(document.body.offsetHeight-100)){ // 如果 div 超出視窗範圍
+                        clearInterval(o.move); // 停止計時器
+                        o.remove(); // 移除 div 元素
+                    }
+                },500,a); // 將 div 的位置傳遞給計時器
+                document.body.appendChild(a); // 將 div 元素添加到 body 中
+            },2000); // 每 2 秒生成一個新的字母
+
+        }
+    </script>
+</head>
+<body onkeydown="kbDown();">
+    <button id="btnStart" onclick="gameStart();">遊戲開始</button>
+</body>
+</html>
