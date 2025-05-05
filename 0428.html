@@ -3,27 +3,60 @@
     <title>JS打字遊戲</title>
     <meta charset="UTF-8">
     <style>
+        #status{
+            display: none;
+            background: hsla;
+            padding: 50%;
+        }
         .word{
             display: inline-block;
             padding: 5px 10px;
             border: 5px solid gray;
             text-align: center;
             font-size: 32pt;
-            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-family: Verdana, Tahoma, sans-serif;
+            position: relative;
         }
+        red{
+            color: red;
+            
+        }
+        
     </style>
     <script>
         input=""; // 用來儲存輸入的字串
         function kbDown(){
-            //console.log(event.key);
             event.preventDefault(); // 阻止預設行為
+            words=Array.from(document.getElementsByClassName("word")); // 獲取所有的字母元素
+                words.forEach(function(w){ // 遍歷所有的字母元素
+                    w.innerHTML=w.innerText; // 將字母元素的內容設置為原始內容
+                });
             if(event.key=="Enter"){ // 如果按下 Enter 鍵
+
+
+
+
                input=""; // 清空輸入字串
+
+
+            }else if(event.key=="Backspace"){ // 如果按下 Backspace 鍵
+                input=input.substring(0,input.length-1); // 刪除輸入字串的最後一個字母
             }else if(event.key.length == 1){
-                input+=event.key; // 將按下的鍵添加到輸入字串中
-               
+                var code=event.key.charCodeAt(0); // 獲取按下的鍵的 ASCII 碼
+                if((code>=65 && code<=90) || (code>=97 && code<=122)){ // 如果按下的鍵是字母
+                    input+=event.key; // 將按下的鍵添加到輸入字串中
+                }
             }
-        }
+                
+                words.filter(function(w){
+                    return w.innerText.startsWith(input); // 過濾出以輸入字串開頭的字母元素
+                }).forEach(function(w){ // 遍歷過濾後的字母元素
+                    w.innerHTML=`<red>${input}<red>`+w.innerText.substring(input.length); // 將輸入字串用 <mark> 標籤包裹起來
+
+                });
+            }
+        
+    
         function rand(min,max){ // 隨機數生成函數
             return Math.floor(Math.random()*(max-min+1))+min; // 返回隨機數
         }
@@ -64,6 +97,7 @@
     </script>
 </head>
 <body onkeydown="kbDown();">
+    <div id="status">Time:<span id="gameTime">0</span>秒　　正確字數:<span id="wordCount">0</span>字</div>
     <button id="btnStart" onclick="gameStart();">遊戲開始</button>
 </body>
 </html>
