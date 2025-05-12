@@ -1,0 +1,90 @@
+<html>
+<head>
+        <title>0512-精靈圖</title>
+        <meta charset="UFT-8">
+        <style>
+            body{
+                background-image: url("pic/grass.jpg");
+                background-size: 100px 70px;/**背景圖大小**/
+                position: relative;/**相對定位**/
+                /**background-repeat: no-repeat;/**背景圖不重複**/
+                /**background-repeat: repeat-x/y;/**背景圖只重複x/y**/
+                /**background-repeat: repeat;/**背景圖重複**/
+            }
+            #role{
+                width: 48px;/**角色寬度**/
+                height: 75px;/**角色高度**/
+                background: url("pic/sprite1.png");
+                background-position-y:0px ;/**背景(人物)圖移動**/
+                animation: walking 0.5s steps(3) infinite;
+                position: absolute;/**絕對定位**/
+            }
+            @keyframes walking{
+                0%{background-position-x: -288px;}
+                100%{background-position-x: -432px;}
+            }
+        </style>
+        <script>
+            function gameInit(){
+                role=document.getElementById("role");
+                role.pos={x:0,y:0};
+                role.walkTarget={x:role.pos.x, y:role.pos.y};
+                role.faceTo=0/*ArrowDown*/;
+                role.move=setInterval(function(){
+                    if(role.pos.x<role.walkTarget.x){
+                        role.pos.x++;
+                        role.faceTo=2/*ArrowRight*/;
+                    }else if(role.pos.x>role.walkTarget.x){
+                        role.pos.x--;
+                        role.faceTo=1/*ArrowLeft*/;
+                    }else if(role.pos.y<role.walkTarget.y){
+                        role.pos.y++;
+                        role.faceTo=0/*ArrowDown*/;
+                    }else if(role.pos.y>role.walkTarget.y){
+                        role.pos.y--;
+                        role.faceTo=3/*ArrowUp*/;
+                    }else{
+                        role.faceTo=0/*ArrowDown*/;
+                    }
+                    role.style.left=role.pos.x+"px";
+                    role.style.top=role.pos.y+"px";
+                    role.style.backgroundPositionY=`-${role.faceTo * 72}px`;
+                },50);
+            }
+            function mykeydown(){
+                event.preventDefault();
+                var key=event.key;
+                var dir=["ArrowDown","ArrowLeft","ArrowRight","ArrowUp"];
+                var dx=[0,-1,1,0];
+                var dy=[1,0,0,-1];
+                if(dir.includes(key)){
+                    role.faceTo=dir.indexOf(key);
+                    role.style.backgroundPositionY=`-${role.faceTo * 72}px`;
+                    role.walkTarget.x+=dx[role.faceTo];
+                    role.walkTarget.y+=dy[role.faceTo];
+                    
+                }
+                /*
+                if(key=="ArrowDown"){//不能有-所以用.
+                    role.style.backgroundPositionY="0px";
+                    
+                }else if(key=="ArrowLeft"){
+                    role.style.backgroundPositionX="-72px";
+                    
+                }else if(key=="ArrowRight"){
+                    role.style.backgroundPositionX="-144px";
+                }else if(key=="Arrowup"){
+                    role.style.backgroundPositionY="-216px";
+                }
+                */
+            }
+            function walkTO(){
+                //console.log(event.x);console.log(event.y);
+                role.walkTarget={x:event.x-32, y:event.y-80};
+            }
+        </script>
+</head>
+<body onload="gameInit();" onkeydown="mykeydown()">
+    <div id="role"></div>
+</body>
+</html>
