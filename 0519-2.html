@@ -3,6 +3,9 @@
     <title>0519-宇宙射擊遊戲</title>
     <meta charset="UTF-8">
     <style>
+        body{
+            margin-top: 0px;
+        }
         #universe{
             width: 800px;
             height: 800px;
@@ -17,6 +20,12 @@
             width:40px;
             position: absolute;
         }
+        #status{
+            width: 790px;
+            background: lightblue;
+            position: absolute;
+            z-index: 9;
+        }
         .bullet{
             width: 3px;
             height: 5px;
@@ -24,13 +33,19 @@
             position: absolute;
             left: 398px;
             top: 734px;
-            
+        }
+        .ufo{
+            height: 40px;
+            top: -40px;
+            position: absolute;
         }
     </style>
     <script>
         function gameInit(){
             ship=document.getElementById("ship");
-            ship.pos={x:380,y:740};
+            ship.w=40;
+            ship.h=60;
+            ship.pos={x:(800-ship.w)/2,y:800-ship.h};
             ship.style.left=ship.pos.x+"px";
             ship.style.top=ship.pos.y+"px";
             ship.moving=0;//0 to stop,+1 right,-1 left
@@ -40,18 +55,37 @@
                 if(ship.pos.x==760 && ship.moving >0) return;
                 ship.pos.x += ship.moving;
                 ship.style.left=ship.pos.x+"px";
-            },10);
+            },1);
+            setInterval(newUFO,1000); // 每秒生成一個 UFO
+            game_score=0; // 初始化遊戲分數
+
         }
         function shoot(){
             var b=document.createElement("div");
             b.className="bullet";
-            b.pos={x:ship.pos.x+18,y:ship.pos.y-6};
+            b.w=4;
+            b.h=6;
+            b.pos={x:ship.pos.x+(ship.w-b.w)/2,y:ship.pos.y-b.h};
             b.style.left=b.pos.x+"px";
             b.style.top=b.pos.y+"px";
             b.move=setInterval(function(){
                 b.pos.y--;
                 b.style.top=b.pos.y+"px";
-                if(b.pos.y<0) die(b);
+                if(b.pos.y<0) {
+                    die(b);
+                }else{
+                     var ufos=Array.from(document.getElementsByClassName("ufo")).filter(function(u){
+                     return(u.pos.x<b.pos.x && u.pos.x+u.w >= b.pos.x+b.w)
+                         &&(u.pos.y+u.h>=b.pos.y);
+                    });
+                    if(ufos.length>0){
+                        game_score += ufos.length; // 增加遊戲分數
+                        ufos.forEach(function(u){die(u);});
+                        die(b); // 子彈擊中 UFO 後消失
+                        document.getElementById("gameScore").innerText=game_score; // 更新遊戲分數顯示
+                    }
+                }
+
             },10);
             document.getElementById("universe").appendChild(b);
         }
@@ -72,10 +106,34 @@
         function mykeyup(){
             ship.moving=0;
         }
+        function rand(min,max){ // 隨機數生成函數
+            return Math.floor(Math.random()*(max-min+1))+min; // 返回隨機數
+        }
+        function newUFO(){
+            var u=document.createElement("img");
+            u.src="pic/ufo.png";
+            u.className="ufo";
+            u.w=60;
+            u.h=40
+            u.pos={x:rand(0,740),y:-40}; // UFO 的初始位置
+            u.style.left=u.pos.x+"px";
+            u.style.top=u.pos.y+"px";
+            u.move=setInterval(function(){
+                u.pos.x+=rand(-1,1); // UFO 在 x 軸上隨機移動
+                if(u.pos.x>800-u.w)u.pos.x=800-u.w; // 確保 UFO 不會超出右邊界
+                else if(u.pos.x<0)u.pos.x=0; // 確保 UFO 不會超出左邊界
+                
+                u.pos.y++;
+                u.style.left=u.pos.x+"px";
+                u.style.top=u.pos.y+"px";
+                if(u.pos.y>800-u.h)die(u);
+            },30);
+            document.getElementById("universe").appendChild(u);
+        }
     </script>
 </head>
 <body onload="gameInit();" onkeydown="mykeydown();" onkeyup="mykeyup();">
-    <div id="status"></div>
+    <div id="status"></div>Time:<span id="gameTime">0</span>秒  Score：:<span id="gameScore">0</span>分</div>
     <div id="universe">
         <img id="ship" src="pic/ship.png">
         <div class="bullet"></div>
