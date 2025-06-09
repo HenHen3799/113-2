@@ -1,29 +1,29 @@
 <html>
 <head>
-	<title>0414 JavaScript Timer</title>
+    <title>0414-JS Timer</title>
     <style>
-        #timer{
+        #timer {
             font-size: 64pt;
         }
-        #lottery{
+        #lottery {
             font-size: 90pt;
             font-family: Impact, sans-serif;
         }
-        #timebar{
+        #timebar {
             width: 600px;
-            height: 20px;
-            background-color: green
+            height:20px;
+            background-color: green;
         }
     </style>
     <script>
-        function pageInit(){
+        function pageInit() {
             t1=0;
         }
-       function timerStart(){
+        function timerStart() {
             if(t1>0) return;
             time=0;
             document.getElementById("timer").innerHTML="00:00";
-            setInterval(function(){
+            t1=setInterval(function(){
                 time++;
                 mm=Math.floor(time/60);
                 ss=time%60;
@@ -31,52 +31,51 @@
                 ss=(ss>9)?ss:"0"+ss;
                 document.getElementById("timer").innerHTML=`${mm}:${ss}`;
             },1000);
-       }
-       function timerStop(){
-            (t1)?clearInterval(t1):alert("尚未開始計時!");
+        }
+        function timerStop() {
+            (t1)?clearInterval(t1):alert("尚未開始計時！");
             t1=0;
-       }
-       ////////////////////////////////////////
-       function lottery(){
-           setTimeout(clearInterval,3000,
-            setInterval(function(){
-                randnum=Math.floor(Math.random()*100);
-                document.getElementById("lottery").innerHTML=(randnum>9)?randnum:"0"+randnum;
-            },50)
-           )
-       }  
-       ////////////////////////////////////////
-       function timebarStart(timeout){
-        tbWidth=600;
-        tbCounter=timeout*10;
-        tbUnit=tbWidth/tbCounter;
-        setInterval(clearInterval,timeout*1000,
-            setInterval(function(){
-                tb=document.getElementById("timebar");
-                tbCounter--;
-                if(tbCounter>150){
-                    tb.style.backgroundColor="green";
-                }else if(tbCounter>100){
-                    tb.style.backgroundColor="orange";
-            }else{
-                tb.style.backgroundColor="red";
-            }
-            tb.style.width=(tbCounter*tbUnit)+"px";
-        },100)
-        );
-       }
+        }
+        ////////////////////////
+        function lottery() {
+            setTimeout(clearInterval,3000,
+                setInterval(function(){
+                    randnum=Math.floor(Math.random()*100);
+                    document.getElementById("lottery").innerHTML=(randnum>9)?randnum:"0"+randnum;
+                },50)
+            );
+        }
+        ////////////////////////
+        function timebarStart(timeout) {
+            tbWidth=600;
+            tbCounter=timeout*10;
+            tbUnit=tbWidth/tbCounter;
+            setTimeout(clearInterval,timeout*1000,
+                setInterval(function(){
+                    tb=document.getElementById("timebar");
+                    tbCounter--;
+                    if(tbCounter>150) {
+                        tb.style.backgroundColor="green";
+                    } else if(tbCounter>100) {
+                        tb.style.backgroundColor="orange";
+                    } else {
+                        tb.style.backgroundColor="red";
+                    }
+                    tb.style.width=(tbCounter*tbUnit)+"px";
+                },100)
+            );
+        }
     </script>
 </head>
 <body onload="pageInit();">
     <div id="timer">00:00</div>
-    <button onclick="timerStart()">開始</button>
+    <button onclick="timerStart();">開始</button>
     <button onclick="timerStop();">停止</button>
     <hr>
     <div id="lottery">00</div>
-    <button onclick="lottery()">樂透</button>
+    <button onclick="lottery();">樂透</button>
     <hr>
     <div id="timebar"></div>
-    <button onclick="timebarStart(30)">開始</button>
-
+    <button onclick="timebarStart(30);">開始</button>
 </body>
 </html>
