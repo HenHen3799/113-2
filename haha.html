@@ -1,0 +1,98 @@
+<html >
+<head>
+    <meta charset="UTF-8">
+    <title>走路</title>
+    <style>
+        body {
+            background-image: url("pic/grass.jpg");
+            background-size: 100px 70px;
+            position: relative;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #role {
+            width: 100px; /* 每格寬度 */
+            height: 180px; /* 每格高度 */
+            background-image: url("pic/P2.PNG");
+            /*background-repeat: no-repeat;*/
+            background-position-x: 0;
+            background-position-y: -180px; /* 走路行的第一格 */
+            position: absolute;
+            left: 0;
+            top: 0;
+            animation: walk 1s steps(8) infinite;
+        }
+
+        @keyframes walk {
+            from { background-position-x: 0; }
+            to { background-position-x: -800px; } /* 64px * 8 frames */
+        }
+    </style>
+    <script>
+        let role;
+
+        function gameInit() {
+            role = document.getElementById("role");
+            role.pos = { x: 0, y: 0 };
+            role.faceTo = -1; // -1: 停止
+
+            // 移動邏輯
+            role.move = setInterval(function () {
+                if (role.faceTo < 0) return;
+
+                const dx = [0, -5, 5, 0]; // 每方向 x 移動量
+                const dy = [5, 0, 0, -5]; // 每方向 y 移動量
+
+                role.pos.x += dx[role.faceTo];
+                role.pos.y += dy[role.faceTo];
+
+                role.style.left = role.pos.x + "px";
+                role.style.top = role.pos.y + "px";
+            }, 50);
+        }
+
+        function mykeydown(event) {
+    event.preventDefault();
+    const key = event.key;
+    const dir = ["ArrowDown", "ArrowLeft", "ArrowRight", "ArrowUp"];
+    const index = dir.indexOf(key);
+
+    if (index >= 0) {
+        role.faceTo = index;
+
+        // 啟用走路動畫
+        role.style.animation = "walk 1s steps(8) infinite";
+
+        // 設定第二行（走路行）
+        role.style.backgroundPositionY = "-180px";
+
+        // 左右翻轉
+        if (key === "ArrowRight") {
+            role.style.transform = "scaleX(-1)";
+            role.style.transformOrigin = "right";
+        } else if (key === "ArrowLeft") {
+            role.style.transform = "scaleX(1)";
+            role.style.transformOrigin = "left";
+        }
+    }
+}
+
+
+        function mykeyup() {
+    role.faceTo = -1;
+
+    // 停止動畫（靜止站姿）
+    role.style.animation = "none";
+
+    // 顯示第一行第一格（站立）
+    role.style.backgroundPositionX = "0px";
+    role.style.backgroundPositionY = "0px";
+}
+
+    </script>
+</head>
+<body onload="gameInit();" onkeydown="mykeydown(event);" onkeyup="mykeyup();">
+    <div id="role"></div>
+</body>
+</html>
