@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>多個掉落物</title>
+  <style>
+    body {
+      background-image: url("pic/grass.jpg");
+      background-size: 100px 70px;
+      margin: 0;
+      overflow: hidden;
+      font-family: sans-serif;
+    }
+
+    #role {
+      width: 100px;
+      height: 180px;
+      background-image: url("pic/P2.PNG");
+      background-position-x: 0;
+      background-position-y: -180px;
+      position: absolute;
+      left: 0;
+      animation: walk 1s steps(8) infinite;
+    }
+
+    @keyframes walk {
+      from { background-position-x: 0; }
+      to { background-position-x: -800px; }
+    }
+
+    .target {
+      width: 100px;
+      height: 100px;
+      position: absolute;
+      background-image: url("pic/Dog1.PNG");
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+
+    #hud {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: rgba(255,255,255,0.8);
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body onload="gameInit();" onkeydown="mykeydown(event);" onkeyup="mykeyup();">
+  <div id="role"></div>
+  <div id="hud">
+    分數：<span id="score">0</span><br>
+    時間：<span id="time">30</span> 秒
+  </div>
+
+  <script>
+    let role;
+    const roleWidth = 100;
+    const roleHeight = 180;
+    let score = 0;
+    let timeLeft = 30;
+    let gameOver = false;
+    const targets = [];
+
+    function gameInit() {
+      role = document.getElementById("role");
+      role.pos = {
+        x: window.innerWidth / 2 - roleWidth / 2,
+        y: window.innerHeight - roleHeight - 20
+      };
+      role.style.left = role.pos.x + "px";
+      role.style.top = role.pos.y + "px";
+      role.faceTo = -1;
+
+      // 倒數計時
+      const timer = setInterval(() => {
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          gameOver = true;
+          role.faceTo = -1;
+          role.style.animation = "none";
+          document.getElementById("time").textContent = "0";
+          alert("時間到！總分：" + score);
+        } else {
+          timeLeft--;
+          document.getElementById("time").textContent = timeLeft;
+        }
+      }, 1000);
+
+      // 控制角色左右移動
+      role.move = setInterval(() => {
+        if (role.faceTo < 0 || gameOver) return;
+
+        const dx = [-15, 15];//移速
+        const maxX = window.innerWidth - roleWidth;
+        let nextX = role.pos.x + dx[role.faceTo];
+        nextX = Math.max(0, Math.min(nextX, maxX));
+        role.pos.x = nextX;
+        role.style.left = nextX + "px";
+
+        checkCollision();
+      }, 30);
+
+      // 每 1 秒產生一個新掉落物
+      setInterval(() => {
+        if (!gameOver) spawnTarget();
+      }, 1000);
+
+      // 所有掉落物下落邏輯
+      setInterval(() => {
+        if (gameOver) return;
+
+        for (let i = targets.length - 1; i >= 0; i--) {
+          const target = targets[i];
+          target.y += target.speed;
+          target.el.style.top = target.y + "px";
+
+          if (target.y > window.innerHeight) {
+            target.el.remove();
+            targets.splice(i, 1); // 刪除超出畫面物件
+          }
+        }
+
+        checkCollision();
+      }, 30);
+    }
+
+    function mykeydown(event) {
+      if (gameOver) return;
+      const key = event.key;
+      if (key === "ArrowLeft") {
+        role.faceTo = 0;
+        role.style.animation = "walk 1s steps(8) infinite";
+        role.style.transform = "scaleX(1)";
+      } else if (key === "ArrowRight") {
+        role.faceTo = 1;
+        role.style.animation = "walk 1s steps(8) infinite";
+        role.style.transform = "scaleX(-1)";
+      }
+    }
+
+    function mykeyup() {
+      if (gameOver) return;
+      role.faceTo = -1;
+      role.style.animation = "none";
+      role.style.backgroundPositionX = "0px";
+    }
+
+    function spawnTarget() {
+      const el = document.createElement("div");
+      el.className = "target";
+      const startX = Math.random() * (window.innerWidth - 100);
+      el.style.left = startX + "px";
+      el.style.top = "-100px";
+      document.body.appendChild(el);
+
+      targets.push({
+        el: el,
+        x: startX,
+        y: -100,
+        speed: 3 + Math.random() * 5 // 隨機速度：3 ~ 8
+      });
+    }
+
+    function checkCollision() {
+      const roleRect = role.getBoundingClientRect();
+
+      for (let i = targets.length - 1; i >= 0; i--) {
+        const targetRect = targets[i].el.getBoundingClientRect();
+
+        const collided = !(
+          roleRect.right < targetRect.left ||
+          roleRect.left > targetRect.right ||
+          roleRect.bottom < targetRect.top ||
+          roleRect.top > targetRect.bottom
+        );
+
+        if (collided) {
+          score++;
+          document.getElementById("score").textContent = score;
+          targets[i].el.remove();
+          targets.splice(i, 1);
+        }
+      }
+    }
+  </script>
+</body>
+</html>
