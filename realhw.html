@@ -1,8 +1,7 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
+<html>
 <head>
   <meta charset="UTF-8" />
-  <title>多個掉落物</title>
+  <title>接狗大作戰</title>
   <style>
     body {
       background-image: url("pic/grass.jpg");
@@ -89,7 +88,7 @@
         }
       }, 1000);
 
-      // 控制角色左右移動
+      // 左右移動
       role.move = setInterval(() => {
         if (role.faceTo < 0 || gameOver) return;
 
@@ -103,12 +102,12 @@
         checkCollision();
       }, 30);
 
-      // 每 1 秒產生一個新掉落物
+      // 產生新小狗
       setInterval(() => {
         if (!gameOver) spawnTarget();
       }, 1000);
 
-      // 所有掉落物下落邏輯
+      // 下落
       setInterval(() => {
         if (gameOver) return;
 
@@ -119,7 +118,7 @@
 
           if (target.y > window.innerHeight) {
             target.el.remove();
-            targets.splice(i, 1); // 刪除超出畫面物件
+            targets.splice(i, 1); // 刪除超出畫面
           }
         }
 
@@ -160,7 +159,7 @@
         el: el,
         x: startX,
         y: -100,
-        speed: 3 + Math.random() * 5 // 隨機速度：3 ~ 8
+        speed: 3 + Math.random() * 5 // 隨機速度
       });
     }
 
